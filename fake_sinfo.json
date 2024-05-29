@@ -1,0 +1,23 @@
+{
+  "meta": {
+    "plugins": {
+      "data_parser": "data_parser\/v0.0.39",
+      "accounting_storage": "accounting_storage\/slurmdbd"
+    },
+    "command": [
+      "sinfo",
+      "--json"
+    ],
+    "Slurm": {
+      "version": {
+        "major": 23,
+        "micro": 6,
+        "minor": 2
+      },
+      "release": "23.02.6"
+    }
+  },
+  "nodes": [],
+  "warnings": [],
+  "errors": []
+}
