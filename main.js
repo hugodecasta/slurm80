@@ -19,7 +19,7 @@ const state_css = {
     'DOWN': { background: '#95a5a6' },
     'UNKNOWN': { background: '#bdc3c7' },
 
-    'IDLE': { background: '#ffffff' },
+    'IDLE': { background: '#2ecc71' },
     'PLANNED': { background: '#3498db' },
 
     'MIXED': { background: '#f1c40f' },
