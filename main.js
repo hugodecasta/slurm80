@@ -16,17 +16,17 @@ const state_css = {
     'RESERVED': { borderColor: '#2c3e50', borderStyle: 'dashed' },
     'DRAIN': { borderColor: '#c0392b' },
 
-    'DOWN': { background: '#e74c3c' },
+    'DOWN': { background: '#95a5a6' },
     'UNKNOWN': { background: '#bdc3c7' },
 
-    'IDLE': { background: '#2ecc71' },
-    'PLANNED': { background: '#1abc9c' },
+    'IDLE': { background: '#ffffff' },
+    'PLANNED': { background: '#3498db' },
 
     'MIXED': { background: '#f1c40f' },
-    'ALLOCATED': { background: '#3498db' },
-    'COMPLETING': { background: '#2980b9' },
+    'ALLOCATED': { background: '#9b59b6' },
+    'COMPLETING': { background: '#8e44ad' },
 
-    'FAIL': { background: '#f39c12' },
+    'FAIL': { background: '#e74c3c' },
 
 }
 
