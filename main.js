@@ -14,6 +14,24 @@ const states = {
     "DOWN": ["#e74c3c", "🕱"],
 }
 
+const state_css = {
+    'RESERVED': { borderColor: '#2c3e50', borderStyle: 'dashed' },
+    'DRAIN': { borderColor: '#c0392b' },
+
+    'DOWN': { background: '#e74c3c' },
+    'UNKNOWN': { background: '#bdc3c7' },
+
+    'IDLE': { background: '#2ecc71' },
+    'PLANNED': { background: '#1abc9c' },
+
+    'MIXED': { background: '#f1c40f' },
+    'ALLOCATED': { background: '#3498db' },
+    'COMPLETING': { background: '#2980b9' },
+
+    'FAIL': { background: '#f39c12' },
+
+}
+
 const alias = {
     gpu_p13: 'V100 (16Go / 32Go)',
     gpu_p2: 'V100 (32Go)',
@@ -23,66 +41,120 @@ const alias = {
 }
 
 function create_node_comp(node) {
-    const { cores, gres, free_memory: memory, cpus } = node
-    const d = div('node').set_style({
-        background: '#fff', padding: '5px', margin: '1px',
-        border: '1px solid #aaa',
+    const { name, states } = node
+
+    const node_div = div('node').set_style({
+        background: '#fff', padding: '10px', margin: '3px',
+        border: '2px solid #aaa',
         display: 'inline-block', width: 'fit-content',
         position: 'relative'
     })
 
-    const state_name = node.state
-    const color = states[state_name][0]
-    const icon = states[state_name][1]
+    const inner_div = div('viewer').set_style({
+        position: 'absolute',
+        zIndex: 10,
+        width: '300px',
+        padding: '10px',
+    }).add2(node_div)
 
-    d.set_style({
-        background: color
-    })
+    inner_div.add(h1(name), hr())
 
-    const ret = span()
-
-    d.add(
-        div('viewer').add(
-            hr(),
-            h3('State: ' + node.state),
-            h3('CPUs: ' + cpus),
-            h3('CORES: ' + cores),
-            gres ?
-                h3('GRES: ', create_elm('ul').add(...gres.split(',').map(n => create_elm('li').add(n))))
-                : '',
-            h3('MEM: ' + memory),
-        ).set_style({
-            position: 'absolute',
-            zIndex: 10,
-            background: color,
-            width: '300px',
-            padding: '10px',
-        })
-    )
-
-    const nodes = [node]
-
-    const node_count = 1
-
-    for (let i = 0; i < node_count; ++i) {
-        const name = nodes[i].name
-        const c = d.clone()
-        decorate_with_setters(c.childNodes[0])
-        c.childNodes[0].prepend(h1(icon + ' ' + name))
-        ret.add(c)
+    function set_data(name, value, css = {}) {
+        if (!value) return
+        inner_div.add(
+            div().add(
+                h3(name).set_style({ marginBottom: '5px' }),
+                div().add('' + value).set_style({ marginLeft: '20px' }),
+            ).set_style(css)
+        )
     }
 
-    // d.add(nodes.nodes.length
-    //     // h2(icon + ' ' + node.state.join(' ')),
-    //     // hr(),
-    //     // h3('CORES: ' + cores.maximum),
-    //     // h3('GRES: ', create_elm('ul').add(...gres.total.split(',').map(n => create_elm('li').add(n)))),
-    //     // h3('MEM: ' + memory.maximum),
-    //     // h3('NODES: ' + nodes.nodes.length),
-    // )
+    set_data('States', node.states.join('</br>'))
+    set_data('GRes', node.gres.split(',').join('</br>'))
+    set_data('Compute', ['CPUs - ' + node.cpus, 'Cores - ' + node.cores].join('</br>'))
+    set_data('ERROR', node.reason, { color: '#c0392b' })
 
-    return ret
+    // for (const [prop, val] of Object.entries(node)) {
+    //     set_data(prop, val)
+    // }
+
+    for (const state of states) {
+        node_div.set_style(state_css[state] ?? {})
+        inner_div.set_style(state_css[state] ?? {})
+    }
+
+    return node_div
 }
+
+// function create_node_comp(node) {
+//     const { cores, gres, free_memory: memory, cpus } = node
+//     const d = div('node').set_style({
+//         background: '#fff', padding: '5px', margin: '1px',
+//         border: '1px solid #aaa',
+//         display: 'inline-block', width: 'fit-content',
+//         position: 'relative'
+//     })
+
+//     const state_name = node.state
+//     const color = states[state_name][0]
+//     const icon = states[state_name][1]
+
+//     d.set_style({
+//         background: color
+//     })
+
+//     const ret = span()
+
+//     d.add(
+//         div('viewer').add(
+//             hr(),
+//             h3('State: ' + node.state),
+//             h3('Archi: ' + node.architecture),
+//             h3('CPUs: ' + cpus),
+//             h3('CORES: ' + cores),
+//             h3('OS: ' + node.operating_system),
+//             gres ?
+//                 h3('GRES: ', create_elm('ul').add(...gres.split(',').map(n => create_elm('li').add(n))))
+//                 : '',
+//             h3('MEM: ' + memory),
+//         ).set_style({
+//             position: 'absolute',
+//             zIndex: 10,
+//             background: color,
+//             width: '300px',
+//             padding: '10px',
+//         })
+//     )
+
+//     if (node.state_flags.includes('DRAIN')) {
+//         d.set_style({
+//             borderColor: 'red'
+//         })
+//     }
+
+//     const nodes = [node]
+
+//     const node_count = 1
+
+//     for (let i = 0; i < node_count; ++i) {
+//         const name = nodes[i].name
+//         const c = d.clone()
+//         decorate_with_setters(c.childNodes[0])
+//         c.childNodes[0].prepend(h1(icon + ' ' + name))
+//         ret.add(c)
+//     }
+
+//     // d.add(nodes.nodes.length
+//     //     // h2(icon + ' ' + node.state.join(' ')),
+//     //     // hr(),
+//     //     // h3('CORES: ' + cores.maximum),
+//     //     // h3('GRES: ', create_elm('ul').add(...gres.total.split(',').map(n => create_elm('li').add(n)))),
+//     //     // h3('MEM: ' + memory.maximum),
+//     //     // h3('NODES: ' + nodes.nodes.length),
+//     // )
+
+//     return ret
+// }
 
 function create_partition_comp(name, nodes) {
 
@@ -95,7 +167,7 @@ function create_partition_comp(name, nodes) {
     }
     name += ' - <span style="font-size:20px;opacity:0.5">(' + node_count + ' nodes)</span>'
 
-    nodes.sort((a, b) => Object.keys(states).indexOf(a.state) - Object.keys(states).indexOf(b.state))
+    nodes.sort((a, b) => Object.keys(states).indexOf(a.states[0]) - Object.keys(states).indexOf(b.states[0]))
 
     d.add(
         h1(name),
@@ -110,7 +182,7 @@ const partitions = {}
 
 for (const node of sinfo) {
     // const { cores, node, nodes, memory, gres, partition, sockets } = slot
-    node.state = node.state.toUpperCase()
+    node.states = [node.state, ...node.state_flags].map(s => s.toUpperCase())
     const { partitions: pts } = node
     const partition = pts[0]
     partitions[partition] ??= []
