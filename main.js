@@ -208,3 +208,5 @@ if (sinfo.length == 0) {
         marginTop: '200px'
     })
 }
+
+setInterval(() => location.reload(), 1000 * 60)
