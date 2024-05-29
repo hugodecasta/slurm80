@@ -1,6 +1,7 @@
 import { create_elm, decorate_with_setters, div, h1, h2, h3, hr, span } from './vanille/components.js'
 
-const sinfo = (await (await fetch('/get_sinfo.php')).json()).sinfo ?? []
+const raw = (await (await fetch('/get_sinfo.php')).json())
+const sinfo = raw.sinfo ?? raw.nodes ?? []
 
 const states = {
     "IDLE": ["#2ecc71", "…"],
