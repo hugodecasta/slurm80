@@ -253,7 +253,7 @@ async function reload_sinfo() {
 
     nodes = DATA.sinfo.sinfo ?? DATA.sinfo.nodes ?? []
 
-    // if (!interval) interval = setInterval(reload_sinfo, DATA.interval * 1000)
+    if (!interval) interval = setInterval(reload_sinfo, DATA.interval * 1000)
 
 }
 reload_sinfo()
