@@ -1,9 +1,11 @@
 import { create_elm, decorate_with_setters, div, h1, h2, h3, hr, span } from './vanille/components.js'
 
+// const raw = (await (await fetch('http://192.168.186.194/get_sinfo.php')).json())
 const raw = (await (await fetch('/get_sinfo.php')).json())
 const sinfo = raw.sinfo ?? raw.nodes ?? []
 
 const states = {
+    "UNKNOWN": ["#ecf0f1", "?"],
     "IDLE": ["#2ecc71", "…"],
     "PLANNED": ["#1abc9c", "⊠"],
     "MIXED": ["#f1c40f", "⧋"],
@@ -20,8 +22,8 @@ const alias = {
     gpu_p5: 'A100 (80Go)',
 }
 
-function create_node_comp(node_data) {
-    const { cores, gres, nodes, memory, node } = node_data
+function create_node_comp(node) {
+    const { cores, gres, free_memory: memory } = node
     const d = div('node').set_style({
         background: '#fff', padding: '5px', margin: '1px',
         border: '1px solid #aaa',
@@ -29,13 +31,7 @@ function create_node_comp(node_data) {
         position: 'relative'
     })
 
-    if (node.state.includes('RESERVED')) {
-        d.set_style({
-            border: '5px solid #c0392b',
-        })
-    }
-
-    const state_name = Object.keys(states).filter(s => node.state.includes(s))[0]
+    const state_name = node.state
     const color = states[state_name][0]
     const icon = states[state_name][1]
 
@@ -48,12 +44,12 @@ function create_node_comp(node_data) {
     d.add(
         div('viewer').add(
             hr(),
-            h3(node.state),
-            h3('CORES: ' + cores.maximum),
+            h3('State: ' + node.state),
+            h3('CORES: ' + cores),
             gres.total ?
                 h3('GRES: ', create_elm('ul').add(...gres.total.split(',').map(n => create_elm('li').add(n))))
                 : '',
-            h3('MEM: ' + memory.maximum),
+            h3('MEM: ' + memory),
         ).set_style({
             position: 'absolute',
             zIndex: 10,
@@ -63,8 +59,12 @@ function create_node_comp(node_data) {
         })
     )
 
-    for (let i = 0; i < nodes.nodes.length; ++i) {
-        const name = nodes.nodes[i]
+    const nodes = [node]
+
+    const node_count = 1
+
+    for (let i = 0; i < node_count; ++i) {
+        const name = nodes[i].name
         const c = d.clone()
         decorate_with_setters(c.childNodes[0])
         c.childNodes[0].prepend(h1(icon + ' ' + name))
@@ -87,14 +87,14 @@ function create_partition_comp(name, nodes) {
 
     const d = div()
 
-    const node_count = nodes.map(n => n.nodes.nodes.length).reduce((a, b) => a + b, 0)
+    const node_count = nodes.length
 
     if (name in alias) {
         name = `${name} - <span style="font-size:20px;opacity:0.7">${alias[name]}</span>`
     }
     name += ' - <span style="font-size:20px;opacity:0.5">(' + node_count + ' nodes)</span>'
 
-    nodes.sort((a, b) => Object.keys(states).indexOf(a.node.state) - Object.keys(states).indexOf(b.node.state))
+    nodes.sort((a, b) => Object.keys(states).indexOf(a.state) - Object.keys(states).indexOf(b.state))
 
     d.add(
         h1(name),
@@ -107,13 +107,16 @@ function create_partition_comp(name, nodes) {
 
 const partitions = {}
 
-for (const slot of sinfo) {
-    const { cores, node, nodes, memory, gres, partition, sockets } = slot
-    partitions[partition.name] ??= []
-    partitions[partition.name].push({
-        cores, gres, nodes, memory, node: { state: node.state[0] }
-    })
+for (const node of sinfo) {
+    // const { cores, node, nodes, memory, gres, partition, sockets } = slot
+    node.state = node.state.toUpperCase()
+    const { partitions: pts } = node
+    const partition = pts[0]
+    partitions[partition] ??= []
+    partitions[partition].push(node)
 }
+
+console.log(partitions)
 
 for (const [pname, nodes] of Object.entries(partitions)) {
     // create_node_comp(data).add2b()

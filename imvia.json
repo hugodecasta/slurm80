@@ -1,0 +1,121 @@
+{
+    "meta": {
+        "plugin": {
+            "type": "openapi/v0.0.38",
+            "name": "Slurm OpenAPI v0.0.38"
+        },
+        "Slurm": {
+            "version": {
+                "major": 22,
+                "micro": 8,
+                "minor": 5
+            },
+            "release": "22.05.8"
+        }
+    },
+    "errors": [],
+    "nodes": [
+        {
+            "architecture": "",
+            "burstbuffer_network_address": "",
+            "boards": 1,
+            "boot_time": 0,
+            "comment": "",
+            "cores": 1,
+            "cpu_binding": 0,
+            "cpu_load": 4294967294,
+            "extra": "",
+            "free_memory": -2,
+            "cpus": 1,
+            "last_busy": 0,
+            "features": "",
+            "active_features": "",
+            "gres": "",
+            "gres_drained": "N/A",
+            "gres_used": "",
+            "mcs_label": "",
+            "name": "julien-GPU",
+            "next_state_after_reboot": "invalid",
+            "address": "192.168.186.134",
+            "hostname": "julien-GPU",
+            "state": "unknown",
+            "state_flags": [
+                "NOT_RESPONDING"
+            ],
+            "next_state_after_reboot_flags": [],
+            "operating_system": "",
+            "owner": null,
+            "partitions": [
+                "debug"
+            ],
+            "port": 6818,
+            "real_memory": 1,
+            "reason": "",
+            "reason_changed_at": 0,
+            "reason_set_by_user": "root",
+            "slurmd_start_time": 0,
+            "sockets": 1,
+            "threads": 1,
+            "temporary_disk": 0,
+            "weight": 1,
+            "tres": "cpu=1,mem=1M,billing=1",
+            "slurmd_version": "",
+            "alloc_memory": 0,
+            "alloc_cpus": 0,
+            "idle_cpus": 1,
+            "tres_used": null,
+            "tres_weighted": 0
+        },
+        {
+            "architecture": "",
+            "burstbuffer_network_address": "",
+            "boards": 1,
+            "boot_time": 0,
+            "comment": "",
+            "cores": 1,
+            "cpu_binding": 0,
+            "cpu_load": 4294967294,
+            "extra": "",
+            "free_memory": -2,
+            "cpus": 1,
+            "last_busy": 0,
+            "features": "",
+            "active_features": "",
+            "gres": "",
+            "gres_drained": "N/A",
+            "gres_used": "",
+            "mcs_label": "",
+            "name": "master",
+            "next_state_after_reboot": "invalid",
+            "address": "192.168.186.194",
+            "hostname": "master",
+            "state": "unknown",
+            "state_flags": [
+                "NOT_RESPONDING"
+            ],
+            "next_state_after_reboot_flags": [],
+            "operating_system": "",
+            "owner": null,
+            "partitions": [
+                "debug"
+            ],
+            "port": 6818,
+            "real_memory": 1,
+            "reason": "",
+            "reason_changed_at": 0,
+            "reason_set_by_user": "root",
+            "slurmd_start_time": 0,
+            "sockets": 1,
+            "threads": 1,
+            "temporary_disk": 0,
+            "weight": 1,
+            "tres": "cpu=1,mem=1M,billing=1",
+            "slurmd_version": "",
+            "alloc_memory": 0,
+            "alloc_cpus": 0,
+            "idle_cpus": 1,
+            "tres_used": null,
+            "tres_weighted": 0
+        }
+    ]
+}
