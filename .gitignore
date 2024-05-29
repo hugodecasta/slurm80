@@ -2,6 +2,10 @@ __*
 __*/
 __*/*
 
+DATA
+custom/
+custom/*
+
 # Logs
 logs
 *.log

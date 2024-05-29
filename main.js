@@ -1,4 +1,4 @@
-import { create_elm, decorate_with_setters, div, h1, h2, h3, hr, listen_to, span } from './vanille/components.js'
+import { create_elm, decorate_with_setters, div, divabs, h1, h2, h3, hr, listen_to, span } from './vanille/components.js'
 
 // const raw = (await (await fetch('http://192.168.186.194/get_sinfo.php')).json())
 
@@ -178,15 +178,38 @@ function create_partition_comp(name, nodes) {
     return d
 }
 
-const datadiv = div().add2b()
+const datadiv = div().add2b().set_style({ position: 'relative' })
 
 function draw_sinfo() {
 
+    console.log(name)
+
     datadiv.clear()
+
+    datadiv.add(
+        div().add(name).set_style({
+            fontSize: '70px',
+            fontWeight: 'bold',
+            marginLeft: '-100px',
+            opacity: 0.1,
+        })
+    )
+
+    const logo_size = 70
+    datadiv.add(
+        divabs().set_style({
+            width: logo_size + 'px', height: logo_size + 'px',
+            top: '7px',
+            left: -(100 + logo_size + 20) + 'px',
+            background: 'url(' + logo + ')',
+            backgroundSize: 'contain'
+        })
+    )
+
 
     const partitions = {}
 
-    for (const node of sinfo) {
+    for (const node of nodes) {
         node.states = [node.state, ...node.state_flags].map(s => s.toUpperCase())
         const { partitions: pts } = node
         const partition = pts[0]
@@ -199,9 +222,8 @@ function draw_sinfo() {
     for (const [pname, nodes] of Object.entries(partitions)) {
         create_partition_comp(pname, nodes).add2(datadiv)
     }
-    console.log(sinfo[0])
 
-    if (sinfo.length == 0) {
+    if (nodes.length == 0) {
         div().add('NO NODES').add2(datadiv).set_style({
             textAlign: 'center',
             fontSize: '70px',
@@ -214,12 +236,24 @@ function draw_sinfo() {
     }
 }
 
-let sinfo = []
+let nodes = []
+let name = null
+let logo = null
+let interval = null
 
-listen_to(() => sinfo, draw_sinfo, true)
+listen_to(() => nodes, draw_sinfo)
+
 async function reload_sinfo() {
-    const raw = (await (await fetch('/get_sinfo.php')).json())
-    sinfo = raw.sinfo ?? raw.nodes ?? []
+    const DATA = (await (await fetch('/get_sinfo.php')).json())
+
+    name = DATA.name
+    logo = DATA.logo
+
+    console.log(DATA)
+
+    nodes = DATA.sinfo.sinfo ?? DATA.sinfo.nodes ?? []
+
+    // if (!interval) interval = setInterval(reload_sinfo, DATA.interval * 1000)
+
 }
-setInterval(reload_sinfo, 1000 * 5)
 reload_sinfo()
