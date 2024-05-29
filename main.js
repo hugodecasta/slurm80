@@ -23,7 +23,7 @@ const alias = {
 }
 
 function create_node_comp(node) {
-    const { cores, gres, free_memory: memory } = node
+    const { cores, gres, free_memory: memory, cpus } = node
     const d = div('node').set_style({
         background: '#fff', padding: '5px', margin: '1px',
         border: '1px solid #aaa',
@@ -45,6 +45,7 @@ function create_node_comp(node) {
         div('viewer').add(
             hr(),
             h3('State: ' + node.state),
+            h3('CPUs: ' + cpus),
             h3('CORES: ' + cores),
             gres.total ?
                 h3('GRES: ', create_elm('ul').add(...gres.total.split(',').map(n => create_elm('li').add(n))))
