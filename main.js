@@ -1,8 +1,6 @@
-import { create_elm, decorate_with_setters, div, h1, h2, h3, hr, span } from './vanille/components.js'
+import { create_elm, decorate_with_setters, div, h1, h2, h3, hr, listen_to, span } from './vanille/components.js'
 
 // const raw = (await (await fetch('http://192.168.186.194/get_sinfo.php')).json())
-const raw = (await (await fetch('/get_sinfo.php')).json())
-const sinfo = raw.sinfo ?? raw.nodes ?? []
 
 const states = {
     "UNKNOWN": ["#ecf0f1", "?"],
@@ -179,35 +177,48 @@ function create_partition_comp(name, nodes) {
     return d
 }
 
-const partitions = {}
+const datadiv = div().add2b()
 
-for (const node of sinfo) {
-    // const { cores, node, nodes, memory, gres, partition, sockets } = slot
-    node.states = [node.state, ...node.state_flags].map(s => s.toUpperCase())
-    const { partitions: pts } = node
-    const partition = pts[0]
-    partitions[partition] ??= []
-    partitions[partition].push(node)
+function draw_sinfo() {
+
+    datadiv.clear()
+
+    const partitions = {}
+
+    for (const node of sinfo) {
+        node.states = [node.state, ...node.state_flags].map(s => s.toUpperCase())
+        const { partitions: pts } = node
+        const partition = pts[0]
+        partitions[partition] ??= []
+        partitions[partition].push(node)
+    }
+
+    console.log(partitions)
+
+    for (const [pname, nodes] of Object.entries(partitions)) {
+        create_partition_comp(pname, nodes).add2(datadiv)
+    }
+    console.log(sinfo[0])
+
+    if (sinfo.length == 0) {
+        div().add('NO NODES').add2(datadiv).set_style({
+            textAlign: 'center',
+            fontSize: '70px',
+            pointerEvents: 'none',
+            userSelect: 'none',
+            opacity: '0.1',
+            fontWeight: 'bold',
+            marginTop: '200px'
+        })
+    }
 }
 
-console.log(partitions)
+let sinfo = []
 
-for (const [pname, nodes] of Object.entries(partitions)) {
-    // create_node_comp(data).add2b()
-    create_partition_comp(pname, nodes).add2b()
+listen_to(() => sinfo, draw_sinfo, true)
+async function reload_sinfo() {
+    const raw = (await (await fetch('/get_sinfo.php')).json())
+    sinfo = raw.sinfo ?? raw.nodes ?? []
 }
-console.log(sinfo[0])
-
-if (sinfo.length == 0) {
-    div().add('NO NODES').add2b().set_style({
-        textAlign: 'center',
-        fontSize: '70px',
-        pointerEvents: 'none',
-        userSelect: 'none',
-        opacity: '0.1',
-        fontWeight: 'bold',
-        marginTop: '200px'
-    })
-}
-
-setInterval(() => location.reload(), 1000 * 60)
+setInterval(reload_sinfo, 1000 * 5)
+reload_sinfo()
