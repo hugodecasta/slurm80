@@ -53,6 +53,7 @@ function create_node_comp(node) {
         zIndex: 10,
         width: '300px',
         padding: '10px',
+        border: '1px solid #aaa'
     }).add2(node_div)
 
     inner_div.add(h1(name), hr())
