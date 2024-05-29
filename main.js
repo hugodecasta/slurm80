@@ -71,6 +71,7 @@ function create_node_comp(node) {
     set_data('States', node.states.join('</br>'))
     set_data('Addr', node.address)
     set_data('GRes', node.gres.split(',').join('</br>'))
+    set_data('GRes used', node.gres_used.split(',').join('</br>'))
     set_data('Compute', ['CPUs - ' + node.idle_cpus + '/' + node.cpus, 'Cores - ' + node.cores].join('</br>'))
     set_data('ERROR', node.reason, { color: '#c0392b' })
 
