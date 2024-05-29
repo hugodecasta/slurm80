@@ -47,8 +47,8 @@ function create_node_comp(node) {
             h3('State: ' + node.state),
             h3('CPUs: ' + cpus),
             h3('CORES: ' + cores),
-            gres.total ?
-                h3('GRES: ', create_elm('ul').add(...gres.total.split(',').map(n => create_elm('li').add(n))))
+            gres ?
+                h3('GRES: ', create_elm('ul').add(...gres.split(',').map(n => create_elm('li').add(n))))
                 : '',
             h3('MEM: ' + memory),
         ).set_style({
