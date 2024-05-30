@@ -17,6 +17,7 @@ const state_css = {
     'DRAIN': { borderColor: '#c0392b' },
 
     'DOWN': { borderColor: '#000', borderStyle: 'dashed' },
+    'NOT_RESPONDING': { background: '#636e72' },
     'UNKNOWN': { background: '#bdc3c7' },
 
     'IDLE': { background: '#2ecc71' },
