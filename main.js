@@ -94,7 +94,7 @@ function create_node_comp(node) {
     }
 
     const gres_data = Object.fromEntries(node.gres.split(',').map(handle_gres_name))
-    const gresused_data = Object.fromEntries(node.gres.split(',').map(handle_gres_name))
+    const gresused_data = Object.fromEntries(node.gres_used.split(',').map(handle_gres_name))
 
     const gres = Object.fromEntries(
         Object.entries(gres_data).map(([name, total]) => [name, { total: parseInt(total), used: parseInt(gresused_data[name]) }])
