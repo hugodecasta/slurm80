@@ -16,7 +16,7 @@ const state_css = {
     'RESERVED': { borderColor: '#2c3e50', borderStyle: 'dashed' },
     'DRAIN': { borderColor: '#c0392b' },
 
-    'DOWN': { background: '#95a5a6' },
+    'DOWN': { background: '#000', borderStyle: 'dashed' },
     'UNKNOWN': { background: '#bdc3c7' },
 
     'IDLE': { background: '#2ecc71' },
