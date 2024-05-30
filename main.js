@@ -214,9 +214,10 @@ function draw_sinfo() {
     for (const node of nodes) {
         node.states = [node.state, ...node.state_flags].map(s => s.toUpperCase())
         const { partitions: pts } = node
-        const partition = pts[0]
-        partitions[partition] ??= []
-        partitions[partition].push(node)
+        for (const partition in pts) {
+            partitions[partition] ??= []
+            partitions[partition].push(node)
+        }
     }
 
     console.log(partitions)
