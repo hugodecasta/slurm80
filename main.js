@@ -80,7 +80,7 @@ function create_node_comp(node) {
                 div().add(
                     ...Array(total).fill(0).map((_, i) => div().set_style({
                         display: 'inline-block', padding: '5px', background: i < used ? '#9b59b6' : '#2ecc71',
-                        margin: '1px', borderRadius: '1000px', border: '1px solid #aaa'
+                        margin: '1px', borderRadius: '1000px', border: '1px solid #fff'
                     }))
                 ).set_style({ marginLeft: '20px' })
             ).set_style(css)
