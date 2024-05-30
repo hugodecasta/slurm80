@@ -52,7 +52,7 @@ function create_node_comp(node) {
     const inner_div = div('viewer').set_style({
         position: 'absolute',
         zIndex: 10,
-        width: '300px',
+        width: '400px',
         padding: '10px',
         border: '1px solid #aaa'
     }).add2(node_div)
@@ -69,11 +69,48 @@ function create_node_comp(node) {
         )
     }
 
+    function set_disp_array(name, total, used, css = {}) {
+        if (total == 0) return
+
+        const rest = total - used
+
+        inner_div.add(
+            div().add(
+                h3(name + ' - (' + used + '/' + total + ')').set_style({ marginBottom: '5px' }),
+                div().add(
+                    ...Array(total).fill(0).map((_, i) => div().set_style({
+                        display: 'inline-block', padding: '5px', background: i < used ? '#9b59b6' : '#2ecc71',
+                        margin: '1px', borderRadius: '1000px'
+                    }))
+                ).set_style({ marginLeft: '20px' })
+            ).set_style(css)
+        )
+    }
+
+    function handle_gres_name(name) {
+        const sp = name.split(':')
+        const count = sp.pop()
+        return [sp.join(':'), count]
+    }
+
+    const gres_data = Object.fromEntries(node.gres.split(',').map(handle_gres_name))
+    const gresused_data = Object.fromEntries(node.gres.split(',').map(handle_gres_name))
+
+    const gres = Object.fromEntries(
+        Object.entries(gres_data).map(([name, total]) => [name, { total: parseInt(total), used: parseInt(gresused_data[name]) }])
+    )
+
+    const gpu_names = Object.keys(gres).filter(n => n.includes('gpu'))
+
     set_data('States', node.states.join('</br>'))
     set_data('Addr', node.address)
-    set_data('GRes', node.gres.split(',').join('</br>'))
-    set_data('GRes used', node.gres_used.split(',').join('</br>'))
-    set_data('Compute', ['CPUs - ' + node.idle_cpus + '/' + node.cpus, 'Cores - ' + node.cores].join('</br>'))
+    // set_data('GRes', node.gres.split(',').join('</br>'))
+    // set_data('GRes used', node.gres_used.split(',').join('</br>'))
+    for (const gpu_name of gpu_names) {
+        set_disp_array(gpu_name.toUpperCase() + 's', gres[gpu_name]?.total, gres[gpu_name]?.used)
+    }
+    set_disp_array('CPUs', node.cpus, node.cpus - node.idle_cpus)
+    // set_data('Compute', ['CPUs - ' + node.idle_cpus + '/' + node.cpus, 'Cores - ' + node.cores].join('</br>'))
     set_data('ERROR', node.reason, { color: '#c0392b' })
 
     // for (const [prop, val] of Object.entries(node)) {
