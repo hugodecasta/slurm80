@@ -59,6 +59,11 @@ function create_node_comp(node) {
 
     inner_div.add(h1(name), hr())
 
+    for (const state of states) {
+        node_div.set_style(state_css[state] ?? {})
+        inner_div.set_style(state_css[state] ?? {})
+    }
+
     function set_data(name, value, css = {}) {
         if (!value) return
         inner_div.add(
@@ -79,7 +84,7 @@ function create_node_comp(node) {
                 h3(name + ' - (' + used + '/' + total + ')').set_style({ marginBottom: '5px' }),
                 div().add(
                     ...Array(total).fill(0).map((_, i) => div().set_style({
-                        display: 'inline-block', padding: '5px', background: i < used ? '#9b59b6' : '#2ecc71',
+                        display: 'inline-block', padding: '5px', background: i < used ? '#9b59b6' : node_div.style.background,
                         margin: '1px', borderRadius: '1000px', border: '1px solid #fff'
                     }))
                 ).set_style({ marginLeft: '20px' })
@@ -116,11 +121,6 @@ function create_node_comp(node) {
     // for (const [prop, val] of Object.entries(node)) {
     //     set_data(prop, val)
     // }
-
-    for (const state of states) {
-        node_div.set_style(state_css[state] ?? {})
-        inner_div.set_style(state_css[state] ?? {})
-    }
 
     return node_div
 }
