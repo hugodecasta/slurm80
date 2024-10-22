@@ -1,4 +1,4 @@
-import { create_elm, decorate_with_setters, div, divabs, h1, h2, h3, hr, listen_to, span } from './vanille/components.js'
+import { button, create_elm, decorate_with_setters, div, divabs, h1, h2, h3, hr, listen_to, span } from './vanille/components.js'
 
 // const raw = (await (await fetch('http://192.168.186.194/get_sinfo.php')).json())
 
@@ -16,7 +16,7 @@ const state_css = {
     'RESERVED': { borderColor: '#2c3e50', borderStyle: 'dashed' },
     'DRAIN': { borderColor: '#c0392b' },
 
-    'DOWN': { borderColor: '#000' },
+    'DOWN': { borderColor: '#000', background: '#fff' },
     'NOT_RESPONDING': { background: '#636e72' },
     'UNKNOWN': { background: '#bdc3c7' },
 
@@ -59,6 +59,13 @@ function create_node_comp(node) {
 
     inner_div.add(h1(name), hr())
 
+    if (states.includes('DOWN')) {
+        inner_div.add(
+            button('Reload node', () => fetch('reload_node.php?nodeName=' + encodeURI(name))),
+            hr(),
+        )
+    }
+
     for (const state of states) {
         node_div.set_style(state_css[state] ?? {})
         inner_div.set_style(state_css[state] ?? {})
@@ -87,7 +94,7 @@ function create_node_comp(node) {
                         display: 'inline-block', padding: '5px', background: i < used ? '#9b59b6' : node_div.style.background,
                         margin: '1px', borderRadius: '1000px', border: '1px solid #fff'
                     }))
-                ).set_style({ marginLeft: '20px' })
+                ).set_style({ marginLeft: '20px' }),
             ).set_style(css)
         )
     }
