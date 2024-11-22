@@ -1,5 +1,5 @@
 body {
-    max-width: 700px;
+    max-width: 1000px;
     margin-left: auto;
     margin-right: auto;
     font-family: Roboto;
@@ -15,4 +15,19 @@ body {
 
 hr {
     border: 1px solid rgba(0, 0, 0, 0.5)
+}
+
+.container {
+    display: grid;
+    margin: 0 auto;
+    /* Centers the container horizontally */
+    grid-gap: 30px;
+    /* Adjusts spacing between items */
+    grid-template-columns: repeat(3, 1fr);
+    /* Creates 7 equal-width columns */
+}
+
+.item {
+    align-items: center;
+    justify-content: center;
 }

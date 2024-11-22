@@ -205,6 +205,10 @@ function create_node_comp(node) {
 function create_partition_comp(name, nodes) {
 
     const d = div()
+        .set_style({
+            border: '2px solid #ddd',
+            paddingLeft: '10px'
+        })
 
     const node_count = nodes.length
 
@@ -217,7 +221,10 @@ function create_partition_comp(name, nodes) {
 
     d.add(
         h1(name),
-        ...nodes.map(n => create_node_comp(n)),
+        div()
+            .add(
+                ...nodes.map(n => create_node_comp(n)),
+            ),
         div().set_style({ marginBottom: '50px' })
     )
 
@@ -236,7 +243,8 @@ function draw_sinfo() {
         div().add(name).set_style({
             fontSize: '70px',
             fontWeight: 'bold',
-            marginLeft: '-100px',
+            marginLeft: '-50px',
+            marginBottom: '30px',
             opacity: 0.1,
         })
     )
@@ -246,7 +254,7 @@ function draw_sinfo() {
         divabs().set_style({
             width: logo_size + 'px', height: logo_size + 'px',
             top: '7px',
-            left: -(100 + logo_size + 20) + 'px',
+            left: -(50 + logo_size + 20) + 'px',
             background: 'url(' + logo + ')',
             backgroundSize: 'contain'
         })
@@ -266,8 +274,9 @@ function draw_sinfo() {
 
     console.log(partitions)
 
+    const dd = div().add2(datadiv).add_classe('container')
     for (const [pname, nodes] of Object.entries(partitions)) {
-        create_partition_comp(pname, nodes).add2(datadiv)
+        create_partition_comp(pname, nodes).add2(dd).add_classe('item')
     }
 
     if (nodes.length == 0) {
