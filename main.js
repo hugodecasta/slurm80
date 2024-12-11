@@ -2,15 +2,15 @@ import { button, create_elm, decorate_with_setters, div, divabs, h1, h2, h3, hr,
 
 // const raw = (await (await fetch('http://192.168.186.194/get_sinfo.php')).json())
 
-const states = {
-    "UNKNOWN": ["#ecf0f1", "?"],
-    "IDLE": ["#2ecc71", "…"],
-    "PLANNED": ["#1abc9c", "⊠"],
-    "MIXED": ["#f1c40f", "⧋"],
-    "ALLOCATED": ["#3498db", "⊗"],
-    "COMPLETING": ["#9b59b6", "𔗫"],
-    "DOWN": ["#e74c3c", "🕱"],
-}
+// const states = {
+//     "UNKNOWN": ["#ecf0f1", "?"],
+//     "IDLE": ["#2ecc71", "…"],
+//     "PLANNED": ["#1abc9c", "⊠"],
+//     "MIXED": ["#f1c40f", "⧋"],
+//     "ALLOCATED": ["#3498db", "⊗"],
+//     "COMPLETING": ["#9b59b6", "𔗫"],
+//     "DOWN": ["#e74c3c", "🕱"],
+// }
 
 const state_css = {
     'RESERVED': { borderColor: '#2c3e50', borderStyle: 'dashed' },
@@ -25,7 +25,7 @@ const state_css = {
 
     'MIXED': { background: '#f1c40f' },
     'ALLOCATED': { background: '#9b59b6' },
-    'COMPLETING': { background: '#8e44ad' },
+    'COMPLETING': { background: '#e67e22' },
 
     'FAIL': { background: '#e74c3c' },
 
