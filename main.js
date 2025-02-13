@@ -375,10 +375,19 @@ function job_comp(job) {
     return job_div
 }
 
+const state_order = [
+    'RUNNING',
+    'FAILED',
+    'PENDING',
+    'CANCELLED',
+    'COMPLETED',
+]
+
 function draw_jobs() {
     jobs_div.clear().add(
         h1('Jobs'),
         ...jobs
+            .sort((a, b) => state_order.indexOf(a.job_state) - state_order.indexOf(b.job_state))
             // .filter(job => !['COMPLETED', 'CANCELLED'].includes(job.job_state))
             .map(job => job_comp(job))
     )
