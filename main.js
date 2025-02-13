@@ -375,7 +375,7 @@ function job_comp(job) {
 function draw_jobs() {
     jobs_div.clear().add(
         h1('Jobs'),
-        ...jobs.map(job => job_comp(job))
+        ...jobs.filter(job => !['COMPLETED', 'CANCELLED'].includes(job.job_state)).map(job => job_comp(job))
     )
 }
 
