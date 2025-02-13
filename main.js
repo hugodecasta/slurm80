@@ -245,6 +245,8 @@ const jobs_div = div().add2b().fixed().set_style({
     borderLeft: '2px solid #ddd',
     padding: '0px 10px',
     background: '#fff',
+    overflowY: 'auto',
+    overflowX: 'hidden'
 })
 
 function draw_sinfo() {
