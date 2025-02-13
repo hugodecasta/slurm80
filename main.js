@@ -308,7 +308,8 @@ function job_comp(job) {
         partition, nodes,
         cpus, tres_per_node,
         user_name,
-        start_time, current_working_directory, command
+        start_time, end_time,
+        current_working_directory, command
     } = job
 
     const job_div = div().set_style({
@@ -340,8 +341,10 @@ function job_comp(job) {
         )
     }
 
-    function time_since_str(start_time) {
-        const diff = (Date.now() / 1000) - start_time
+    function time_since_str(start_time, end_time) {
+        const now = Date.now() / 1000
+        const used_now = now > end_time ? end_time : now
+        const diff = used_now - start_time
         const days = Math.floor(diff / (60 * 60 * 24))
         const hours = Math.floor((diff % (60 * 60 * 24)) / (60 * 60))
         const minutes = Math.floor((diff % (60 * 60)) / 60)
@@ -354,7 +357,7 @@ function job_comp(job) {
         span(user_name).set_style({ textDecoration: 'underline' }),
         span(' '),
         span('since ').set_style({ color: '#aaa' }),
-        span(time_since_str(start_time)).set_style({ textDecoration: 'underline' }),
+        span(time_since_str(start_time, end_time)).set_style({ textDecoration: 'underline' }),
     )
 
     job_div.add(
