@@ -1,4 +1,4 @@
-import { button, create_elm, decorate_with_setters, div, divabs, h1, h2, h3, hr, listen_to, span } from './vanille/components.js'
+import { button, create_elm, decorate_with_setters, div, divabs, h1, h2, h3, hr, listen_to, p, span } from './vanille/components.js'
 
 // const raw = (await (await fetch('http://192.168.186.194/get_sinfo.php')).json())
 
@@ -10,6 +10,14 @@ const states = {
     "ALLOCATED": ["#3498db", "⊗"],
     "COMPLETING": ["#9b59b6", "𔗫"],
     "DOWN": ["#e74c3c", "🕱"],
+}
+
+const job_color_map = {
+    'RUNNING': '#f1c40f',
+    'PENDING': '#636e72',
+    'CANCELLED': '#2c3e50',
+    'FAILED': '#e74c3c',
+    'COMPLETED': '#1abc6b'
 }
 
 const state_css = {
@@ -232,10 +240,14 @@ function create_partition_comp(name, nodes) {
 }
 
 const datadiv = div().add2b().set_style({ position: 'relative' })
+const jobs_div = div().add2b().fixed().set_style({
+    right: '0px', top: '0px', width: '300px', height: '100%',
+    borderLeft: '2px solid #ddd',
+    padding: '0px 10px',
+    background: '#fff',
+})
 
 function draw_sinfo() {
-
-    console.log(name)
 
     datadiv.clear()
 
@@ -272,8 +284,6 @@ function draw_sinfo() {
         }
     }
 
-    console.log(partitions)
-
     const dd = div().add2(datadiv).add_classe('container')
     for (const [pname, nodes] of Object.entries(partitions)) {
         create_partition_comp(pname, nodes).add2(dd).add_classe('item')
@@ -292,12 +302,91 @@ function draw_sinfo() {
     }
 }
 
+function job_comp(job) {
+    const {
+        job_id, name, job_state,
+        partition, nodes,
+        cpus, tres_per_node,
+        user_name,
+        start_time, current_working_directory, command
+    } = job
+
+    const job_div = div().set_style({
+        width: 'calc(100% - 34px)',
+        padding: '10px',
+        margin: '5px',
+        border: '2px solid #ddd',
+    })
+
+    function ressource_comp(partition, nodes, cpus, tres_per_node) {
+        const CPUs = cpus
+        const GPUs = parseInt(tres_per_node.split(':').pop())
+        return div().flex().add(
+            div()
+                .padding({ right: 10 })
+                .set_style({
+                    borderRight: '2px solid #ddd',
+                })
+                .add(
+                    h2(nodes).margin({ top: 0, bottom: 0 }),
+                    p(`(${partition})`).margin({ top: 0, bottom: 0 }).set_style({ opacity: 0.5 }),
+                ),
+            div()
+                .padding({ left: 10 })
+                .add(
+                    p('CPUs: ', span(CPUs).set_style({ color: '#0098ac', fontWeight: 'bold' })).margin({ bottom: 0 }),
+                    p('GPUs: ', span(GPUs).set_style({ color: '#64b100', fontWeight: 'bold' })).margin({ top: 5 }),
+                )
+        )
+    }
+
+    function time_since_str(start_time) {
+        const diff = (Date.now() / 1000) - start_time
+        const days = Math.floor(diff / (60 * 60 * 24))
+        const hours = Math.floor((diff % (60 * 60 * 24)) / (60 * 60))
+        const minutes = Math.floor((diff % (60 * 60)) / 60)
+        const seconds = Math.floor(diff % 60)
+        return `${days}d ${hours}h ${minutes}m ${seconds}s`
+    }
+
+    const text = div().add(
+        span('by ').set_style({ color: '#aaa' }),
+        span(user_name).set_style({ textDecoration: 'underline' }),
+        span(' '),
+        span('since ').set_style({ color: '#aaa' }),
+        span(time_since_str(start_time)).set_style({ textDecoration: 'underline' }),
+    )
+
+    job_div.add(
+        h2(`${job_id} - "${name}"`).margin({ top: 0 }),
+        text.margin({ top: -15, bottom: 20 }),
+        ressource_comp(partition, nodes, cpus, tres_per_node),
+        // h3(`Working Directory: ${current_working_directory}`),
+        // h3(`Command: ${command}`)
+    )
+
+    job_div.set_style({
+        borderColor: job_color_map[job_state]
+    })
+
+    return job_div
+}
+
+function draw_jobs() {
+    jobs_div.clear().add(
+        h1('Jobs'),
+        ...jobs.map(job => job_comp(job))
+    )
+}
+
 let nodes = []
+let jobs = []
 let name = null
 let logo = null
 let interval = null
 
 listen_to(() => nodes, draw_sinfo)
+listen_to(() => jobs, draw_jobs)
 
 async function reload_sinfo() {
     const DATA = (await (await fetch('/get_sinfo.php')).json())
@@ -305,9 +394,9 @@ async function reload_sinfo() {
     name = DATA.name
     logo = DATA.logo
 
-    console.log(DATA)
-
     nodes = DATA.sinfo.sinfo ?? DATA.sinfo.nodes ?? []
+    jobs = DATA.squeue.jobs ?? []
+    console.log(jobs)
 
     if (!interval) interval = setInterval(reload_sinfo, DATA.interval * 1000)
 
