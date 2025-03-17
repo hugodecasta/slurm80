@@ -263,7 +263,7 @@ bottom_div.add(
 
 function open_acount_request() {
 
-    const request = { firstname: '', lastname: '', pub: '' }
+    const request = { firstname: '', lastname: '', mail: '', pub: '' }
 
     const overlay = divabscenter().add2b().set_style({
         padding: '20px',
@@ -277,6 +277,9 @@ function open_acount_request() {
         br(),
         h2('Lastname'),
         input('', 'text', (name) => request.lastname = name).set_style({ width: '100%' }),
+        br(),
+        h2('eMail'),
+        input('', 'text', (name) => request.mail = mail).set_style({ width: '100%' }),
         br(),
         h2('Generate ssh public key (paste)'),
         input('', 'password', (pub) => request.pub = pub).set_style({ width: '100%' }),
