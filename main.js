@@ -279,7 +279,7 @@ function open_acount_request() {
         input('', 'text', (name) => request.lastname = name).set_style({ width: '100%' }),
         br(),
         h2('eMail'),
-        input('', 'text', (name) => request.mail = mail).set_style({ width: '100%' }),
+        input('', 'text', (mail) => request.mail = mail).set_style({ width: '100%' }),
         br(),
         h2('Generate ssh public key (paste)'),
         input('', 'password', (pub) => request.pub = pub).set_style({ width: '100%' }),
