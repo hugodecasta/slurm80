@@ -1,4 +1,5 @@
-import { button, create_elm, decorate_with_setters, div, divabs, h1, h2, h3, hr, listen_to, p, span } from './vanille/components.js'
+import { alink, br, button, create_elm, decorate_with_setters, div, divabs, divabscenter, h1, h2, h3, hr, input, listen_to, p, span } from './vanille/components.js'
+import { post_json } from './vanille/fetch_utils.js'
 
 // const raw = (await (await fetch('http://192.168.186.194/get_sinfo.php')).json())
 
@@ -248,6 +249,52 @@ const jobs_div = div().add2b().fixed().set_style({
     overflowY: 'auto',
     overflowX: 'hidden'
 })
+const bottom_div = div().fixed().add2b().set_style({
+    position: 'absolute',
+    bottom: '0px',
+    left: '0px',
+    padding: '10px',
+    background: '#fff'
+})
+
+bottom_div.add(
+    button('Account request', open_acount_request)
+)
+
+function open_acount_request() {
+
+    const request = { firstname: '', lastname: '', pub: '' }
+
+    const overlay = divabscenter().add2b().set_style({
+        padding: '20px',
+        background: '#fff',
+        border: '5px solid #000',
+    }).add(
+        h1('Account request'),
+        hr(),
+        h2('Firstname'),
+        input('', 'text', (name) => request.firstname = name).set_style({ width: '100%' }),
+        br(),
+        h2('Lastname'),
+        input('', 'text', (name) => request.lastname = name).set_style({ width: '100%' }),
+        br(),
+        h2('Generate ssh public key (paste)'),
+        input('', 'password', (pub) => request.pub = pub).set_style({ width: '100%' }),
+        hr(),
+        button('Cancel', () => overlay.remove()),
+        button('Send', async () => {
+            console.log(request)
+            let ok = false
+            try {
+                ok = await post_json('/account_request.php', request)
+            } catch (e) {
+            }
+            if (ok) alert('Request sent !')
+            else alert('Request send failed ! Contact IT support')
+            overlay.remove()
+        })
+    )
+}
 
 function draw_sinfo() {
 

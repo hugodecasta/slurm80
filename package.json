@@ -1,0 +1,15 @@
+{
+  "name": "slurm80",
+  "version": "1.0.0",
+  "description": "Slurm web app listening on 80",
+  "main": "main.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "nodemailer": "^6.10.0"
+  }
+}

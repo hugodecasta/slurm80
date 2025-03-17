@@ -3,8 +3,7 @@ __*/
 __*/*
 
 DATA
-custom/
-custom/*
+last_request.json
 
 # Logs
 logs
