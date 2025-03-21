@@ -281,7 +281,7 @@ function open_acount_request() {
         h2('eMail'),
         input('', 'text', (mail) => request.mail = mail).set_style({ width: '100%' }),
         br(),
-        h2('Generate ssh public key (paste)'),
+        h2('Generated ssh public key (paste here)'),
         input('', 'password', (pub) => request.pub = pub).set_style({ width: '100%' }),
         hr(),
         button('Cancel', () => overlay.remove()),
@@ -364,7 +364,7 @@ function job_comp(job) {
         current_working_directory, command
     } = job
 
-    const job_div = div().set_style({
+    const job_div = div().relative().set_style({
         width: 'calc(100% - 34px)',
         padding: '10px',
         margin: '5px',
@@ -418,7 +418,16 @@ function job_comp(job) {
         ressource_comp(partition, nodes, cpus, tres_per_node),
         // h3(`Working Directory: ${current_working_directory}`),
         // h3(`Command: ${command}`)
+        divabs().add(job_state).set_style({
+            opacity: 0.3,
+            fontSize: '10px',
+            left: '',
+            right: '5px',
+            top: '',
+            bottom: '5px'
+        })
     )
+
 
     job_div.set_style({
         borderColor: job_color_map[job_state]
