@@ -410,6 +410,12 @@ function job_comp(job) {
         span(' '),
         span('since ').set_style({ color: '#aaa' }),
         span(time_since_str(start_time, end_time)).set_style({ textDecoration: 'underline' }),
+        br(),
+        span('qos ').set_style({ color: '#aaa' }),
+        span(job.qos).set_style({ textDecoration: 'underline' }),
+        span(' '),
+        span('p=').set_style({ color: '#aaa' }),
+        span(job.priority),
     )
 
     job_div.add(
