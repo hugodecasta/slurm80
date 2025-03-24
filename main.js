@@ -18,7 +18,8 @@ const job_color_map = {
     'PENDING': '#636e72',
     'CANCELLED': '#2c3e50',
     'FAILED': '#e74c3c',
-    'COMPLETED': '#1abc6b'
+    'COMPLETED': '#1abc6b',
+    'TIMEOUT': '#e74c3c',
 }
 
 const state_css = {
@@ -445,6 +446,7 @@ function job_comp(job) {
 const state_order = [
     'RUNNING',
     'FAILED',
+    'TIMEOUT',
     'PENDING',
     'CANCELLED',
     'COMPLETED',
