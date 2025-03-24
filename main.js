@@ -463,17 +463,32 @@ function user_jobs_comp(user_name, jobs) {
             .map(job => job_comp(job))
     )
 
+    const status = jobs.reduce((acc, job) => {
+        acc[job.job_state] ??= 0
+        acc[job.job_state]++
+        return acc
+    }, {})
+
+    const status_div = div()
+        .add(
+            ...Object.entries(status).map(([state, count]) => div().add(
+                span(state + ' - ' + count).set_style({ color: job_color_map[state] })
+            ))
+        )
+        .margin({ bottom: 10 })
+
     function update() {
         cache_open[user_name] = open
         band.clear().add(
             div()
                 .add(
-                    h2((open ? "-  " : "+  ") + user_name + ' (' + jobs.length + ')').set_style({ cursor: 'pointer' }).inline()
+                    h2((open ? "-  " : "+  ") + user_name + ' (' + jobs.length + ')').set_style({ cursor: 'pointer' }).inline(),
+                    status_div
                 )
                 .set_style({
                     paddingLeft: '10px',
                 }),
-            open ? inner : null
+            open ? div().add(hr(), inner) : null
         )
     }
     let open = cache_open[user_name] ?? false
