@@ -446,8 +446,8 @@ function job_comp(job) {
 const state_order = [
     'RUNNING',
     'FAILED',
-    'TIMEOUT',
     'PENDING',
+    'TIMEOUT',
     'CANCELLED',
     'COMPLETED',
 ]
