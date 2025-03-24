@@ -484,11 +484,12 @@ function user_jobs_comp(user_name, jobs) {
         band.clear().add(
             div()
                 .add(
-                    h2((open ? "-  " : "+  ") + user_name + ' (' + jobs.length + ')').set_style({ cursor: 'pointer' }).inline(),
+                    h2((open ? "-  " : "+  ") + user_name + ' (' + jobs.length + ')').inline(),
                     status_div
                 )
                 .set_style({
                     paddingLeft: '10px',
+                    cursor: 'pointer'
                 }),
             open ? div().add(hr(), inner) : null
         )
