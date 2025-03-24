@@ -450,13 +450,50 @@ const state_order = [
     'COMPLETED',
 ]
 
-function draw_jobs() {
-    jobs_div.clear().add(
-        h1('Jobs'),
+function user_jobs_comp(user_name, jobs) {
+
+    const band = div()
+        .set_style({
+            border: '2px solid #ddd',
+        })
+    const inner = div().add(
         ...jobs
             .sort((a, b) => state_order.indexOf(a.job_state) - state_order.indexOf(b.job_state))
-            // .filter(job => !['COMPLETED', 'CANCELLED'].includes(job.job_state))
             .map(job => job_comp(job))
+    )
+
+    function update() {
+        band.clear().add(
+            div()
+                .add(
+                    h2((open ? "-  " : "+  ") + user_name).set_style({ cursor: 'pointer' }).inline()
+                )
+                .set_style({
+                    paddingLeft: '10px',
+                }),
+            open ? inner : null
+        )
+    }
+    let open = false
+    band.set_click(() => open = !open)
+    listen_to(() => open, update, true)
+
+    return band
+}
+
+function draw_jobs() {
+
+    const aggreb_job_by_user = jobs.reduce((acc, job) => {
+        acc[job.user_name] ??= []
+        acc[job.user_name].push(job)
+        return acc
+    }, {})
+
+    console.log(aggreb_job_by_user)
+
+    jobs_div.clear().add(
+        h1('Jobs'),
+        ...Object.entries(aggreb_job_by_user).map(([user_name, jobs]) => user_jobs_comp(user_name, jobs))
     )
 }
 
