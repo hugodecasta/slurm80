@@ -19,7 +19,7 @@ const job_color_map = {
     'CANCELLED': '#2c3e50',
     'FAILED': '#e74c3c',
     'COMPLETED': '#1abc6b',
-    'TIMEOUT': '#e74c3c',
+    'TIMEOUT': '#fc8e11',
 }
 
 const state_css = {
