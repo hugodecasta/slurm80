@@ -450,6 +450,7 @@ const state_order = [
     'COMPLETED',
 ]
 
+const cache_open = {}
 function user_jobs_comp(user_name, jobs) {
 
     const band = div()
@@ -463,6 +464,7 @@ function user_jobs_comp(user_name, jobs) {
     )
 
     function update() {
+        cache_open[user_name] = open
         band.clear().add(
             div()
                 .add(
@@ -474,7 +476,7 @@ function user_jobs_comp(user_name, jobs) {
             open ? inner : null
         )
     }
-    let open = false
+    let open = cache_open[user_name] ?? false
     band.set_click(() => open = !open)
     listen_to(() => open, update, true)
 
